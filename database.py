@@ -11,61 +11,9 @@ load_dotenv()
 URL = st.secrets.get("https://psmepcgqofdhidgcyyby.supabase.co") or os.getenv("https://psmepcgqofdhidgcyyby.supabase.co")
 KEY = st.secrets.get("sb_secret_iVXs7lUF4-eCsnF3-WXyRg_5DUYWHUP") or os.getenv("sb_secret_iVXs7lUF4-eCsnF3-WXyRg_5DUYWHUP")
 
-# Validasi Koneksi agar tidak terjadi crash 'redacted error'
-if not URL or not KEY:
+if not url or not key:
     st.error("❌ Konfigurasi Supabase tidak ditemukan!")
-    st.info("Pastikan SUPABASE_URL dan SUPABASE_KEY sudah diisi di Secrets (online) atau .env (lokal).")
+    st.write("Daftar kunci yang terdeteksi di server:", list(st.secrets.keys()))
     st.stop()
 
-# Inisialisasi Client Supabase
-try:
-    supabase = create_client(URL, KEY)
-except Exception as e:
-    st.error(f"❌ Gagal terhubung ke Supabase: {e}")
-    st.stop()
-
-# --- FUNGSI-FUNGSI DATABASE ---
-
-def log_usage(user_id, task_type, prompt, result, img_url, credits=1):
-    """Mencatat setiap pembuatan konten ke dalam tabel usage_logs."""
-    data = {
-        "user_id": user_id,
-        "type": task_type,
-        "prompt_text": prompt,
-        "result_text": result,
-        "image_url": img_url,
-        "cost_credits": credits
-    }
-    try:
-        return supabase.table("usage_logs").insert(data).execute()
-    except Exception as e:
-        print(f"Error log_usage: {e}")
-        return None
-
-def get_user_history(user_id):
-    """Mengambil riwayat pembuatan konten milik user tertentu."""
-    try:
-        res = supabase.table("usage_logs") \
-            .select("*") \
-            .eq("user_id", user_id) \
-            .order("timestamp", desc=True) \
-            .execute()
-        return res.data
-    except Exception as e:
-        print(f"Error get_user_history: {e}")
-        return []
-
-def get_admin_stats():
-    """Mengambil data gabungan untuk halaman Admin Panel."""
-    try:
-        # Ambil semua data user dari tabel profiles
-        users = supabase.table("profiles").select("*").execute()
-        # Ambil semua log aktivitas dari tabel usage_logs
-        logs = supabase.table("usage_logs").select("*").order("timestamp", desc=True).execute()
-        
-        return users.data, logs.data
-    except Exception as e:
-        print(f"Error get_admin_stats: {e}")
-        return [], []
-
-
+supabase = create_client(url, key)
