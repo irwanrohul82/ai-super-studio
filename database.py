@@ -9,7 +9,7 @@ load_dotenv()
 # --- KONFIGURASI KONEKSI ---
 # Mengambil variabel dari Streamlit Cloud Secrets atau file .env lokal
 URL = st.secrets.get("https://psmepcgqofdhidgcyyby.supabase.co") or os.getenv("https://psmepcgqofdhidgcyyby.supabase.co")
-KEY = st.secrets.get("sb_publishable_-340BVKwT_6W2H51MKZhww_EYfk-V_0") or os.getenv("sb_publishable_-340BVKwT_6W2H51MKZhww_EYfk-V_0")
+KEY = st.secrets.get("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbWVwY2dxb2ZkaGlkZ2N5eWJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5OTY0ODQsImV4cCI6MjA4NTU3MjQ4NH0.VlAZEm_uMMETYRJU2axhpYFSjwcE5B4HFaHFSRi5jyI") or os.getenv("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbWVwY2dxb2ZkaGlkZ2N5eWJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5OTY0ODQsImV4cCI6MjA4NTU3MjQ4NH0.VlAZEm_uMMETYRJU2axhpYFSjwcE5B4HFaHFSRi5jyI")
 
 # Validasi Koneksi agar tidak terjadi crash 'redacted error'
 if not URL or not KEY:
@@ -67,3 +67,4 @@ def get_admin_stats():
     except Exception as e:
         print(f"Error get_admin_stats: {e}")
         return [], []
+
