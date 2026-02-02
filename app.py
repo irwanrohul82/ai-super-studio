@@ -1,5 +1,6 @@
 import streamlit as st
 
+st.sidebar.success("Pilih menu di atas untuk mulai.")
 st.set_page_config(page_title="AI Super Studio", layout="wide")
 
 st.markdown("# 🚀 AI Super Studio")
@@ -16,4 +17,5 @@ with col2:
     st.write("✅ Hasil Kualitas Studio")
 
 st.divider()
+
 st.image("https://via.placeholder.com/800x400.png?text=Preview+Dashboard+AI", caption="Tampilan Dashboard Kreatif")
