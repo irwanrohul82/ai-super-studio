@@ -1,21 +1,18 @@
 import streamlit as st
 
-st.sidebar.success("Pilih menu di atas untuk mulai.")
-st.set_page_config(page_title="AI Super Studio", layout="wide")
+st.set_page_config(page_title="AI Super Studio", layout="wide", page_icon="🚀")
 
 st.markdown("# 🚀 AI Super Studio")
-st.subheader("Ubah Ide Jadi Konten Viral Dalam 60 Detik")
+st.write("Satu klik untuk membuat konten Multimodal (Teks, Gambar, Audio).")
 
-st.write("Satu platform untuk Teks, Gambar, Suara, dan Video.")
+if "user_id" not in st.session_state:
+    st.session_state["user_id"] = "guest_user_123" # ID Dummy untuk testing
 
-col1, col2 = st.columns(2)
-with col1:
-    if st.button("🔥 Mulai Sekarang (Gratis 50 Kredit)"):
-        st.info("Silakan buka menu 'Studio' di sidebar.")
-with col2:
-    st.write("✅ Tanpa Biaya Langganan di Awal")
-    st.write("✅ Hasil Kualitas Studio")
+st.info("Pilih menu **Studio** di sidebar kiri untuk mulai membuat konten!")
 
 st.divider()
-
-st.image("https://via.placeholder.com/800x400.png?text=Preview+Dashboard+AI", caption="Tampilan Dashboard Kreatif")
+st.subheader("Fitur Unggulan:")
+col1, col2, col3 = st.columns(3)
+col1.write("🖼️ **AI Image Generation**")
+col2.write("🔊 **Human-like Voiceover**")
+col3.write("📝 **AI Copywriting**")
