@@ -3,8 +3,8 @@ from supabase import create_client
 from dotenv import load_dotenv
 
 load_dotenv()
-url = os.getenv("SUPABASE_URL")
-key = os.getenv("SUPABASE_KEY")
+url = os.getenv("https://psmepcgqofdhidgcyyby.supabase.co")
+key = os.getenv("sb_publishable_-340BVKwT_6W2H51MKZhww_EYfk-V_0")
 supabase = create_client(url, key)
 
 def register_user(email, password):
@@ -21,4 +21,5 @@ def log_usage(user_id, task_type, credits):
 def get_admin_stats():
     users = supabase.table("profiles").select("*").execute()
     logs = supabase.table("usage_logs").select("*").execute()
+
     return users.data, logs.data
