@@ -1,13 +1,33 @@
 import os
+import streamlit as st
 from supabase import create_client
 from dotenv import load_dotenv
 
+# Memuat file .env jika ada (untuk penggunaan lokal)
 load_dotenv()
-url = os.getenv("https://psmepcgqofdhidgcyyby.supabase.co")
-key = os.getenv("sb_publishable_-340BVKwT_6W2H51MKZhww_EYfk-V_0")
-supabase = create_client(url, key)
+
+# --- KONFIGURASI KONEKSI ---
+# Mengambil variabel dari Streamlit Cloud Secrets atau file .env lokal
+URL = st.secrets.get("https://psmepcgqofdhidgcyyby.supabase.co") or os.getenv("https://psmepcgqofdhidgcyyby.supabase.co")
+KEY = st.secrets.get("sb_publishable_-340BVKwT_6W2H51MKZhww_EYfk-V_0") or os.getenv("sb_publishable_-340BVKwT_6W2H51MKZhww_EYfk-V_0")
+
+# Validasi Koneksi agar tidak terjadi crash 'redacted error'
+if not URL or not KEY:
+    st.error("❌ Konfigurasi Supabase tidak ditemukan!")
+    st.info("Pastikan SUPABASE_URL dan SUPABASE_KEY sudah diisi di Secrets (online) atau .env (lokal).")
+    st.stop()
+
+# Inisialisasi Client Supabase
+try:
+    supabase = create_client(URL, KEY)
+except Exception as e:
+    st.error(f"❌ Gagal terhubung ke Supabase: {e}")
+    st.stop()
+
+# --- FUNGSI-FUNGSI DATABASE ---
 
 def log_usage(user_id, task_type, prompt, result, img_url, credits=1):
+    """Mencatat setiap pembuatan konten ke dalam tabel usage_logs."""
     data = {
         "user_id": user_id,
         "type": task_type,
@@ -17,15 +37,33 @@ def log_usage(user_id, task_type, prompt, result, img_url, credits=1):
         "cost_credits": credits
     }
     try:
-        supabase.table("usage_logs").insert(data).execute()
+        return supabase.table("usage_logs").insert(data).execute()
     except Exception as e:
-        print(f"Gagal simpan database: {e}")
+        print(f"Error log_usage: {e}")
+        return None
 
 def get_user_history(user_id):
-    res = supabase.table("usage_logs").select("*").eq("user_id", user_id).order("timestamp", desc=True).execute()
-    return res.data
+    """Mengambil riwayat pembuatan konten milik user tertentu."""
+    try:
+        res = supabase.table("usage_logs") \
+            .select("*") \
+            .eq("user_id", user_id) \
+            .order("timestamp", desc=True) \
+            .execute()
+        return res.data
+    except Exception as e:
+        print(f"Error get_user_history: {e}")
+        return []
 
 def get_admin_stats():
-    users = supabase.table("profiles").select("*").execute()
-    logs = supabase.table("usage_logs").select("*").execute()
-    return users.data, logs.data
+    """Mengambil data gabungan untuk halaman Admin Panel."""
+    try:
+        # Ambil semua data user dari tabel profiles
+        users = supabase.table("profiles").select("*").execute()
+        # Ambil semua log aktivitas dari tabel usage_logs
+        logs = supabase.table("usage_logs").select("*").order("timestamp", desc=True).execute()
+        
+        return users.data, logs.data
+    except Exception as e:
+        print(f"Error get_admin_stats: {e}")
+        return [], []
