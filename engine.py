@@ -4,7 +4,7 @@ import os
 from elevenlabs.client import ElevenLabs
 
 def generate_all_assets(prompt):
-    client = openai.OpenAI(api_key=os.getenv("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"))
+    client = openai.OpenAI(api_key=os.getenv("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"))
     
     # 1. Teks (GPT-4o)
     text_res = client.chat.completions.create(
@@ -30,3 +30,4 @@ def generate_all_assets(prompt):
 
 
     return naskah, img_url, audio_file
+
