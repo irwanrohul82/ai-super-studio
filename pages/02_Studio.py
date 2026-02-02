@@ -14,6 +14,14 @@ if st.button("🚀 Generate Masterpiece"):
         with c1:
             st.subheader("🖼️ Hasil Visual")
             st.image(img_url, use_container_width=True)
+
+            # ... di dalam blok if st.button("🚀 Generate Masterpiece"):
+naskah, img_url, audio_path = generate_all_assets(prompt)
+
+# SIMPAN KE HISTORY
+from database import log_usage
+user_id = st.session_state.get("user_id", "guest_user")
+log_usage(user_id, "Full Generation", prompt, naskah, img_url)
             
             # --- FITUR DOWNLOAD GAMBAR ---
             try:
