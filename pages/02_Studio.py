@@ -1,4 +1,5 @@
 import streamlit as st
+import requests
 from engine import generate_all_assets
 
 st.title("🎨 Creative Studio")
@@ -9,9 +10,38 @@ if st.button("🚀 Generate Masterpiece"):
         naskah, img_url, audio_path = generate_all_assets(prompt)
         
         c1, c2 = st.columns(2)
+        
         with c1:
-            st.image(img_url, caption="Hasil Visual AI")
+            st.subheader("🖼️ Hasil Visual")
+            st.image(img_url, use_container_width=True)
+            
+            # --- FITUR DOWNLOAD GAMBAR ---
+            try:
+                img_data = requests.get(img_url).content
+                st.download_button(
+                    label="💾 Download Gambar",
+                    data=img_data,
+                    file_name="ai_image.png",
+                    mime="image/png",
+                    use_container_width=True
+                )
+            except:
+                st.error("Gagal menyiapkan download gambar.")
+
         with c2:
+            st.subheader("🔊 Voiceover & Naskah")
             st.write(f"**Naskah:** {naskah}")
             st.audio(audio_path)
+            
+            # --- FITUR DOWNLOAD AUDIO ---
+            with open(audio_path, "rb") as file:
+                st.download_button(
+                    label="📥 Download Audio (MP3)",
+                    data=file,
+                    file_name="ai_voiceover.mp3",
+                    mime="audio/mp3",
+                    use_container_width=True
+                )
+            
+            st.divider()
             st.button("🎬 Generate Video (Pro Only)")
