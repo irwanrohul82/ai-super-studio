@@ -4,4 +4,5 @@ elevenlabs
 replicate
 supabase
 pandas
+groq
 python-dotenv
