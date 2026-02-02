@@ -1,0 +1,7 @@
+streamlit
+openai
+elevenlabs
+replicate
+supabase
+pandas
+python-dotenv
